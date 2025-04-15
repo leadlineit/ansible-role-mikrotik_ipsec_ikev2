@@ -1,4 +1,3 @@
----
 name: Molecule test & Ansible-Galaxy CI
 
 on:
