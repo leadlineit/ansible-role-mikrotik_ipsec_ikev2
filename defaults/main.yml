@@ -1,0 +1,36 @@
+---
+# defaults file for ansible-role-mikrotik_ipsec_ikev2
+
+# IPsec Proposal
+ipsec_proposal_name: "{{ inventory_hostname }}"
+ipsec_proposal_auth_algorithms: sha256
+ipsec_proposal_enc_algorithms: aes-256-cbc
+ipsec_proposal_lifetime: 1h
+
+# IPsec Profile
+ipsec_profile_name: "{{ inventory_hostname }}"
+ipsec_profile_dh_group: modp2048
+ipsec_profile_enc_algorithm: aes-256
+ipsec_profile_hash_algorithm: sha256
+
+# IPsec Peer
+ipsec_peer_address: ""
+ipsec_peer_exchange_mode: ike2
+
+# IPsec Identity
+ipsec_secret: ""
+
+# IPsec Policy
+ipsec_policy_name: "{{ inventory_hostname }}"
+ipsec_src_address: ""
+ipsec_dst_address: ""
+ipsec_sa_src_address: ""
+ipsec_policy_tunnel: true
+ipsec_policy_proposal: "{{ ipsec_proposal_name }}"
+
+# Firewall rules
+ipsec_firewall_ports: "500,4500"
+ipsec_firewall_protocols: ["udp", "ipsec-esp"]
+
+# Notifications
+ipsec_restart_tunnel: true

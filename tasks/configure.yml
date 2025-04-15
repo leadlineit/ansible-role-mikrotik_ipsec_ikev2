@@ -1,0 +1,62 @@
+---
+ - name: Get current IPsec proposals
+   community.routeros.api:
+     path: /ip/ipsec/proposal
+   register: ipsec_proposals
+
+ - name: Add IPsec proposal
+   community.routeros.api:
+     path: /ip/ipsec/proposal
+     add: "name={{ ipsec_proposal_name }} auth-algorithms=sha256 enc-algorithms=aes-256-cbc lifetime=1h"
+   when: ipsec_proposals.msg is iterable and (ipsec_proposals.msg | selectattr('name', '==', ipsec_proposal_name) | list | length == 0)
+   notify: Restart IPsec Tunnel
+
+ - name: Get current IPsec profiles
+   community.routeros.api:
+     path: /ip/ipsec/profile
+   register: ipsec_profiles
+
+ - name: Add IPsec profile
+   community.routeros.api:
+     path: /ip/ipsec/profile
+     add: "name={{ ipsec_profile_name }} dh-group=modp2048 enc-algorithm=aes-256 hash-algorithm=sha256"
+   when: ipsec_profiles.msg is iterable and (ipsec_profiles.msg | selectattr('name', '==', ipsec_profile_name) | list | length == 0)
+   notify: Restart IPsec Tunnel
+
+ - name: Get current IPsec peers
+   community.routeros.api:
+     path: /ip/ipsec/peer
+   register: ipsec_peers
+
+ - name: Add IPsec peer
+   community.routeros.api:
+     path: /ip/ipsec/peer
+     add: "name={{ inventory_hostname }} address={{ ipsec_peer_address }} profile={{ ipsec_profile_name }} exchange-mode=ike2"
+   when: ipsec_peers.msg is iterable and (ipsec_peers.msg | selectattr('name', '==', inventory_hostname) | list | length == 0)
+   notify: Restart IPsec Tunnel
+
+ - name: Get current IPsec identities
+   community.routeros.api:
+     path: /ip/ipsec/identity
+   register: ipsec_identities
+
+ - name: Add IPsec identity
+   community.routeros.api:
+     path: /ip/ipsec/identity
+     add: "peer={{ inventory_hostname }} secret={{ ipsec_secret }}"
+   when: ipsec_identities.msg is iterable and (ipsec_identities.msg | selectattr('peer', '==', inventory_hostname) | list | length == 0)
+
+
+   notify: Restart IPsec Tunnel
+
+ - name: Get current IPsec policies
+   community.routeros.api:
+     path: /ip/ipsec/policy
+   register: ipsec_policies
+
+ - name: Add IPsec policy
+   community.routeros.api:
+     path: /ip/ipsec/policy
+     add: "src-address={{ ipsec_src_address }} dst-address={{ ipsec_dst_address }} sa-dst-address={{ ipsec_peer_address }} sa-src-address={{ ipsec_sa_src_address }} tunnel=true peer={{ inventory_hostname }} proposal={{ ipsec_proposal_name }}"
+   when: ipsec_policies.msg is iterable and (ipsec_policies.msg | selectattr('src-address', '==', ipsec_src_address) | selectattr('dst-address', '==', ipsec_dst_address) | list | length == 0)
+   notify: Restart IPsec Tunnel

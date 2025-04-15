@@ -1,0 +1,19 @@
+---
+galaxy_info:
+  author: Dmytro Fedorov
+  description: Configure s2s IPsec IKEv2 on MikroTik routers via API
+  company: leadlineit
+  namespace: leadlineit
+  role_name: mikrotik_ipsec_ikev2
+  license: MIT
+  min_ansible_version: '2.11'
+  platforms:
+    - name: GenericLinux
+      versions:
+        - 'all'
+  galaxy_tags:
+    - networking
+    - mikrotik
+    - ipsec
+    - ikev2
+    - vpn

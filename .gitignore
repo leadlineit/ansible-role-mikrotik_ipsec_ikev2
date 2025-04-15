@@ -1,0 +1,28 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Molecule test directories
+molecule/*/instance_config.yml
+.molecule/
+
+# Virtualenv
+.venv/
+env/
+venv/
+
+# Ansible retry files
+*.retry
+
+# Logs and temp files
+*.log
+*.tmp
+
+# OS / Editor specific
+.DS_Store
+.idea/
+.vscode/
+
+# Galaxy metadata
+*.tar.gz

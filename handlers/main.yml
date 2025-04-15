@@ -1,0 +1,76 @@
+---
+- name: Get current IPsec peers
+  community.routeros.api:
+    path: /ip/ipsec/peer
+  register: ipsec_peers
+  listen: Restart IPsec Tunnel
+
+- name: Get current IPsec policies
+  community.routeros.api:
+    path: /ip/ipsec/policy
+  register: ipsec_policies
+  listen: Restart IPsec Tunnel
+
+- name: Disable IPsec peer
+  community.routeros.api:
+    path: /ip/ipsec/peer
+    update: >
+      id={{ (ipsec_peers.msg |
+              selectattr('name', '==', inventory_hostname) |
+              list |
+              first).id | default('') }}
+      disabled=yes
+  when: (ipsec_peers.msg |
+          selectattr('name', '==', inventory_hostname) |
+          list |
+          length > 0)
+  listen: Restart IPsec Tunnel
+
+- name: Disable IPsec policy
+  community.routeros.api:
+    path: /ip/ipsec/policy
+    update: >
+      id={{ (ipsec_policies.msg |
+              selectattr('src-address', '==', ipsec_src_address) |
+              selectattr('dst-address', '==', ipsec_dst_address) |
+              list |
+              first).id | default('') }}
+      disabled=yes
+  when: (ipsec_policies.msg |
+          selectattr('src-address', '==', ipsec_src_address) |
+          selectattr('dst-address', '==', ipsec_dst_address) |
+          list |
+          length > 0)
+  listen: Restart IPsec Tunnel
+
+- name: Enable IPsec peer
+  community.routeros.api:
+    path: /ip/ipsec/peer
+    update: >
+      id={{ (ipsec_peers.msg |
+              selectattr('name', '==', inventory_hostname) |
+              list |
+              first).id | default('') }}
+      disabled=no
+  when: (ipsec_peers.msg |
+          selectattr('name', '==', inventory_hostname) |
+          list |
+          length > 0)
+  listen: Restart IPsec Tunnel
+
+- name: Enable IPsec policy
+  community.routeros.api:
+    path: /ip/ipsec/policy
+    update: >
+      id={{ (ipsec_policies.msg |
+              selectattr('src-address', '==', ipsec_src_address) |
+              selectattr('dst-address', '==', ipsec_dst_address) |
+              list |
+              first).id | default('') }}
+      disabled=no
+  when: (ipsec_policies.msg |
+          selectattr('src-address', '==', ipsec_src_address) |
+          selectattr('dst-address', '==', ipsec_dst_address) |
+          list |
+          length > 0)
+  listen: Restart IPsec Tunnel

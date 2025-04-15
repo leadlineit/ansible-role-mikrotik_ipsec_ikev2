@@ -1,0 +1,46 @@
+---
+ - name: Get current firewall filter rules
+   community.routeros.api:
+     path: /ip/firewall/filter
+   register: firewall_filters
+
+ - name: Add firewall rule to allow UDP ports 500,4500 for IPsec
+   community.routeros.api:
+     path: /ip/firewall/filter
+     add: "place-before=1 chain=input action=accept protocol=udp port=500,4500 comment=\"Allow IPsec\""
+   when: firewall_filters.msg is iterable and (firewall_filters.msg | selectattr('comment', 'defined') | selectattr('comment', '==', 'Allow IPsec') | list | length == 0)
+
+ - name: Add firewall rule to allow IPsec ESP
+   community.routeros.api:
+     path: /ip/firewall/filter
+     add: "place-before=1 chain=input action=accept protocol=ipsec-esp comment=\"Allow IPsec ESP\""
+   when: firewall_filters.msg is iterable and (firewall_filters.msg | selectattr('comment', 'defined') | selectattr('comment', '==', 'Allow IPsec ESP') | list | length == 0)
+
+ - name: Add firewall rule to allow IPsec policy in
+   community.routeros.api:
+     path: /ip/firewall/filter
+     add: "place-before=1 chain=forward action=accept ipsec-policy=in,ipsec comment=\"defconf accept in ipsec policy\""
+   when: firewall_filters.msg is iterable and (firewall_filters.msg | selectattr('comment', 'defined') | selectattr('comment', '==', 'defconf accept in ipsec policy') | list | length == 0)
+
+ - name: Add firewall rule to allow IPsec policy out
+   community.routeros.api:
+     path: /ip/firewall/filter
+     add: "place-before=1 chain=forward action=accept ipsec-policy=out,ipsec comment=\"defconf accept out ipsec policy\""
+   when: firewall_filters.msg is iterable and (firewall_filters.msg | selectattr('comment', 'defined') | selectattr('comment', '==', 'defconf accept out ipsec policy') | list | length == 0)
+
+ - name: Get current NAT rules
+   community.routeros.api:
+     path: /ip/firewall/nat
+   register: firewall_nat_rules
+
+ - name: Add NAT rule to allow S2S traffic (src to dst)
+   community.routeros.api:
+     path: /ip/firewall/nat
+     add: "place-before=0 chain=srcnat src-address={{ ipsec_src_address }} dst-address={{ ipsec_dst_address }} action=accept comment=\"allow s2s src->dst\""
+   when: firewall_nat_rules.msg is iterable and (firewall_nat_rules.msg | selectattr('comment', 'defined') | selectattr('comment', '==', 'allow s2s src->dst') | list | length == 0)
+
+ - name: Add NAT rule to allow S2S traffic (dst to src)
+   community.routeros.api:
+     path: /ip/firewall/nat
+     add: "place-before=0 chain=srcnat src-address={{ ipsec_dst_address }} dst-address={{ ipsec_src_address }} action=accept comment=\"allow s2s dst->src\""
+   when: firewall_nat_rules.msg is iterable and (firewall_nat_rules.msg | selectattr('comment', 'defined') | selectattr('comment', '==', 'allow s2s dst->src') | list | length == 0)

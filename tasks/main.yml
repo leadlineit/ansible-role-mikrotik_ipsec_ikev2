@@ -1,0 +1,8 @@
+---
+- name: Include firewall rules
+  ansible.builtin.import_tasks: firewall.yml
+  tags: [firewall, ipsec]
+
+- name: Include IPsec configuration
+  ansible.builtin.import_tasks: configure.yml
+  tags: [configure, ipsec]
