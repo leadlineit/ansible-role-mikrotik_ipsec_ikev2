@@ -1,3 +1,4 @@
+---
 name: Molecule test & Ansible-Galaxy CI
 
 on:
@@ -58,9 +59,9 @@ jobs:
           ANSIBLE_GALAXY_API_KEY: ${{ secrets.ANSIBLE_GALAXY_API_KEY }}
         run: |
           owner=$(echo "${{ github.repository }}" | cut -d/ -f1)
-          repo=$(echo "${{ github.repository }}" | cut -d/ -f2 | sed 's/^ansible-role-//')
-          echo "Importing role: $owner / $repo"
-          curl -s -X POST \
-            -H "Content-Type: application/json" \
-            -H "Authorization: token $ANSIBLE_GALAXY_API_KEY" \
-            https://galaxy.ansible.com/api/v1/notifications/ --data "{\"github_user\": \"$owner\", \"github_repo\": \"ansible-role-$repo\"}"
+          raw_repo=$(echo "${{ github.repository }}" | cut -d/ -f2)
+          repo=$(echo "$raw_repo" | sed 's/^ansible-role-//')
+          echo "Importing role: $owner / $repo (from repo: $raw_repo)"
+          ansible-galaxy import \
+            --api-key "$ANSIBLE_GALAXY_API_KEY" \
+            "$owner" "$repo"
