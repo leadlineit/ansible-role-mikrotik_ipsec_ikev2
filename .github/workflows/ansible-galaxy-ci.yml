@@ -11,7 +11,7 @@ on:
 
 defaults:
   run:
-    working-directory: 'leadlineit.mikrotik_ipsec_ikev2'
+    working-directory: 'mikrotik_ipsec_ikev2'
 
 jobs:
   lint:
@@ -21,7 +21,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v3.5.3
         with:
-          path: 'leadlineit.mikrotik_ipsec_ikev2'
+          path: 'mikrotik_ipsec_ikev2'
 
       - name: Set up Python 3
         uses: actions/setup-python@v2.3.4
@@ -44,7 +44,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v3.5.3
         with:
-          path: 'leadlineit.mikrotik_ipsec_ikev2'
+          path: 'mikrotik_ipsec_ikev2'
 
       - name: Set up Python 3
         uses: actions/setup-python@v2.3.4
@@ -54,14 +54,7 @@ jobs:
       - name: Install Ansible
         run: pip3 install ansible-base
 
-      - name: Trigger a new import on Ansible Galaxy
-        env:
-          ANSIBLE_GALAXY_API_KEY: ${{ secrets.ANSIBLE_GALAXY_API_KEY }}
-        run: |
-          owner=$(echo "${{ github.repository }}" | cut -d/ -f1)
-          raw_repo=$(echo "${{ github.repository }}" | cut -d/ -f2)
-          repo=$(echo "$raw_repo" | sed 's/^ansible-role-//')
-          echo "Importing role: $owner / $repo (from repo: $raw_repo)"
-          ansible-galaxy import \
-            --api-key "$ANSIBLE_GALAXY_API_KEY" \
-            "$owner" "$repo"
+      - name: Trigger a new import on Galaxy.
+        run: >-
+          ansible-galaxy role import --api-key ${{ secrets.ANSIBLE_GALAXY_API_KEY }}
+          $(echo ${{ github.repository }} | cut -d/ -f1) $(echo ${{ github.repository }} | cut -d/ -f2)
