@@ -64,4 +64,4 @@ jobs:
           curl -s -X POST \
             -H "Content-Type: application/json" \
             -H "Authorization: token $ANSIBLE_GALAXY_API_KEY" \
-            https://galaxy.ansible.com/api/v1/notifications/ --data "{\"github_user\": \"$owner\", \"github_repo\": \"ansible-role-$repo\"}"
+            https://galaxy.ansible.com/api/v1/roles/import/ --data "{\"github_user\": \"$owner\", \"github_repo\": \"ansible-role-$repo\"}"
