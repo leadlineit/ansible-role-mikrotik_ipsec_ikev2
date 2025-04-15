@@ -86,7 +86,7 @@ You can override any variable in your inventory or playbook.
 ## 📦 Install via Galaxy
 
 ```bash
-ansible-galaxy install M0rtm.mikrotik_ipsec_ikev2
+ansible-galaxy role install leadlineit.mikrotik_ipsec_ikev2
 ```
 
 ---
@@ -97,7 +97,7 @@ ansible-galaxy install M0rtm.mikrotik_ipsec_ikev2
 - hosts: mikrotik
   gather_facts: false
   roles:
-    - role: M0rtm.mikrotik_ipsec_ikev2
+    - role: leadlineit.mikrotik_ipsec_ikev2
       vars:
         ipsec_peer_address: "192.168.2.111"
         ipsec_secret: "SuperSecretKey"
@@ -124,7 +124,7 @@ You can override any variables from `defaults/main.yml` or define additional IKE
 - `restart_ipsec`
 
 ```bash
-ansible-playbook site.yml --tags restart_ipsec
+ansible-playbook mk01.yml --tags restart_ipsec
 ```
 
 ---
