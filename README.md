@@ -2,8 +2,8 @@
 
 #  Ansible Role: MikroTik IPsec IKEv2 Configuration
 
-![Build Status](https://github.com/M0rtm/ansible-role-mikrotik_ipsec_ikev2/actions/workflows/ansible-galaxy-ci.yml/badge.svg)
-[![Galaxy Role](https://img.shields.io/badge/Ansible--Galaxy-M0rtm.mikrotik_ipsec_ikev2-blue.svg?logo=ansible&logoColor=white)](https://galaxy.ansible.com/M0rtm/mikrotik_ipsec_ikev2/)
+[![Molecule test & Ansible-Galaxy CI](https://github.com/leadlineit/ansible-role-mikrotik_ipsec_ikev2/actions/workflows/ansible-galaxy-ci.yml/badge.svg)](https://github.com/leadlineit/ansible-role-mikrotik_ipsec_ikev2/actions/workflows/ansible-galaxy-ci.yml)
+[![Galaxy Role](https://img.shields.io/badge/Ansible--Galaxy-leadlineit.mikrotik_ipsec_ikev2-blue.svg?logo=ansible&logoColor=white)](https://galaxy.ansible.com/leadlineit/mikrotik_ipsec_ikev2/)
 
 > Configure secure Site-to-Site IPsec IKEv2 tunnels between MikroTik routers using Ansible and the community.routeros collection.
 
